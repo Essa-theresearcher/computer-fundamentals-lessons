@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Computer Fundamentals Quiz</title>
+<style>
+:root{--bg:#f3f6f4;--card:#fff;--ink:#14302b;--mut:#5b716c;--line:#d3dedb;--acc:#0b7a6b;--accInk:#fff;--ok:#1b8a4b;--okBg:#dff3e6;--bad:#c23a2e;--badBg:#fbe3e0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a18;--card:#182724;--ink:#e6f1ee;--mut:#9bb3ad;--line:#2b403b;--acc:#35c2ad;--accInk:#062a24;--ok:#5fd28a;--okBg:#173a28;--bad:#ff8a7d;--badBg:#3d1f1b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1a18;--card:#182724;--ink:#e6f1ee;--mut:#9bb3ad;--line:#2b403b;--acc:#35c2ad;--accInk:#062a24;--ok:#5fd28a;--okBg:#173a28;--bad:#ff8a7d;--badBg:#3d1f1b;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.45 "Trebuchet MS",Verdana,system-ui,sans-serif}
+main{max-width:560px;margin:0 auto;padding:16px}
+h1{font-size:28px;line-height:1.15;margin:8px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:12px 0}
+.bar{height:8px;background:var(--line);border-radius:8px;overflow:hidden;margin:6px 0 2px}
+.bar i{display:block;height:100%;background:var(--acc);width:0;transition:width .3s}
+.meta{display:flex;justify-content:space-between;color:var(--mut);font-size:14px}
+.tag{display:inline-block;font-size:13px;color:var(--acc);font-weight:bold;margin-bottom:6px}
+.q{font-size:20px;font-weight:bold;margin:4px 0 14px}
+button,input{font:inherit}
+.opt,.btn{display:block;width:100%;text-align:left;padding:14px;margin:8px 0;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;cursor:pointer;min-height:52px}
+.opt:active{transform:scale(.99)}
+.btn{background:var(--acc);color:var(--accInk);border-color:var(--acc);text-align:center;font-weight:bold}
+.btn.alt{background:transparent;color:var(--acc)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid .opt{text-align:center;margin:0;font-size:15px}
+.grid .opt b{display:block;font-size:34px;line-height:1.2}
+.ok{background:var(--okBg)!important;border-color:var(--ok)!important}
+.no{background:var(--badBg)!important;border-color:var(--bad)!important}
+.fb{margin-top:12px;padding:12px;border-radius:10px;font-size:16px}
+input[type=text]{width:100%;padding:14px;border:2px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink)}
+.row{display:flex;align-items:center;gap:8px;margin:8px 0}
+.row span{flex:1;font-weight:bold}
+.row button{width:auto;margin:0;padding:10px 12px;min-height:44px;text-align:center}
+.big{font-size:56px;font-weight:bold;line-height:1;margin:6px 0}
+.miss{border-top:1px solid var(--line);padding:10px 0;font-size:15px}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+const Q=[
+{t:'mc',s:'Hardware',q:'Which of these is an INPUT device?',o:['Monitor','Keyboard','Printer','Speaker'],a:1,e:'A keyboard sends information INTO the computer.'},
+{t:'mc',s:'Hardware',q:'What is the "brain" of the computer?',o:['RAM','Hard disk','CPU','Monitor'],a:2,e:'The CPU (processor) does the thinking and calculations.'},
+{t:'mc',s:'Software',q:'Which of these is SOFTWARE?',o:['Keyboard','Microsoft Word','Mouse','Printer'],a:1,e:'Software is a program. You cannot touch it.'},
+{t:'mc',s:'Software',q:'Which of these is an operating system?',o:['Windows','Google Chrome','Excel','Facebook'],a:0,e:'Windows runs the computer and lets other programs work.'},
+{t:'mc',s:'Hardware',q:'Which part stores your files permanently?',o:['RAM','CPU','Keyboard','Hard disk'],a:3,e:'The hard disk keeps files even when the computer is off.'},
+{t:'mc',s:'Keyboard',q:'Which key do you hold to type a CAPITAL letter?',o:['Tab','Ctrl','Shift','Alt'],a:2,e:'Hold Shift and press a letter.'},
+{t:'tf',s:'Software',q:'A computer can work without an operating system.',a:false,e:'Without an operating system, the computer cannot run programs.'},
+{t:'tf',s:'Hardware',q:'RAM keeps your files forever, even when the computer is off.',a:false,e:'RAM is temporary memory. The hard disk is permanent.'},
+{t:'tf',s:'Hardware',q:'Hardware is the part of a computer you can touch.',a:true,e:'Yes: screen, keyboard, mouse, and so on.'},
+{t:'tf',s:'Safety',q:'It is safe to share your password with anyone.',a:false,e:'Keep passwords private.'},
+{t:'tf',s:'Keyboard',q:'Ctrl + C copies something.',a:true,e:'C for Copy.'},
+{t:'fill',s:'Basics',q:'The physical parts of a computer are called ________.',a:['hardware'],e:'Hardware = parts you can touch.'},
+{t:'fill',s:'Basics',q:'Programs that run on a computer are called ________.',a:['software'],e:'Software = programs and apps.'},
+{t:'fill',s:'Keyboard',q:'To save a file, press Ctrl + ____ (one letter).',a:['s'],e:'Ctrl + S saves.'},
+{t:'mc',s:'Keyboard',q:'What does Ctrl + V do?',o:['Copy','Save','Paste','Print'],a:2,e:'V is for Paste, like pasting what you copied.'},
+{t:'sort',s:'Sort it',q:'Is each device INPUT or OUTPUT?',c:['Input','Output'],i:[['⌨️ Keyboard',0],['🖥️ Monitor',1],['🖱️ Mouse',0],['🖨️ Printer',1],['🎤 Microphone',0],['🔊 Speaker',1]],e:'Input sends data in. Output shows or gives results.'},
+{t:'sort',s:'Sort it',q:'Is each item HARDWARE or SOFTWARE?',c:['Hardware','Software'],i:[['🖱️ Mouse',0],['📝 Word',1],['🪟 Windows',1],['🖥️ Monitor',0],['🌐 Chrome',1],['⌨️ Keyboard',0]],e:'Hardware you can touch. Software you can only see on the screen.'},
+{t:'tap',s:'Tap it',q:'Tap where deleted files go.',o:[['🗑️','Recycle Bin'],['📁','Folder'],['🖨️','Printer'],['🌐','Browser']],a:0,e:'Deleted files wait in the Recycle Bin.'},
+{t:'tap',s:'Tap it',q:'Tap the device that turns paper into a digital file.',o:[['🖨️','Printer'],['🔊','Speaker'],['🖱️','Mouse'],['📠','Scanner']],a:3,e:'A scanner copies paper into the computer.'},
+{t:'tap',s:'Safety',q:'Tap the STRONGEST password.',o:[['🔓','1234'],['🔓','password'],['🔐','Kenya@2026!x'],['🔓','ali']],a:2,e:'Strong passwords mix letters, numbers and symbols, and are long.'},
+{t:'tap',s:'Internet',q:'Tap the web browser.',o:[['📝','Notepad'],['🌍','Chrome'],['📊','Excel'],['🪟','Windows']],a:1,e:'Chrome opens websites.'},
+{t:'mc',s:'Storage',q:'KB, MB and GB measure what?',o:['Speed','Screen size','Storage size','Volume'],a:2,e:'They measure the size of files and storage.'}
+];
+const app=document.getElementById('app');
+let name='',i=0,score=0,res=[],done=false,sortState={};
+const norm=s=>s.trim().toLowerCase().replace(/[^a-z0-9]/g,'');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function start(){
+  app.innerHTML=`<h1>Computer Fundamentals Quiz</h1>
+  <p>${Q.length} short questions. Tap or type your answers. You will see if you are right straight away.</p>
+  <div class="card"><label for="nm"><b>Your full name</b></label><div class="row"><input id="nm" type="text" autocomplete="name" placeholder="Type your name"></div>
+  <button class="btn" id="go">Start quiz</button><p id="err" style="color:var(--bad);margin:6px 0 0"></p></div>`;
+  document.getElementById('go').onclick=()=>{
+    const v=document.getElementById('nm').value.trim();
+    if(!v){document.getElementById('err').textContent='Please type your name first.';return}
+    name=v;i=0;score=0;res=[];show();
+  };
+}
+function head(){
+  const q=Q[i];
+  return `<div class="meta"><span>Question ${i+1} of ${Q.length}</span><span>Score: ${score}</span></div>
+  <div class="bar"><i style="width:${i/Q.length*100}%"></i></div>
+  <div class="card"><div class="tag">${q.s}</div><div class="q">${esc(q.q)}</div><div id="body"></div><div id="fb"></div></div>`;
+}
+function show(){
+  const q=Q[i];sortState={};
+  app.innerHTML=head();
+  const b=document.getElementById('body');
+  if(q.t==='mc'){
+    b.innerHTML=q.o.map((o,k)=>`<button class="opt" data-k="${k}">${esc(o)}</button>`).join('');
+    b.querySelectorAll('.opt').forEach(x=>x.onclick=()=>pick(+x.dataset.k===q.a,x,b));
+  }else if(q.t==='tf'){
+    b.innerHTML=`<button class="opt" data-k="1">True</button><button class="opt" data-k="0">False</button>`;
+    b.querySelectorAll('.opt').forEach(x=>x.onclick=()=>pick((x.dataset.k==='1')===q.a,x,b));
+  }else if(q.t==='tap'){
+    b.innerHTML=`<div class="grid">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><b>${o[0]}</b>${esc(o[1])}</button>`).join('')}</div>`;
+    b.querySelectorAll('.opt').forEach(x=>x.onclick=()=>pick(+x.dataset.k===q.a,x,b,q.a));
+  }else if(q.t==='fill'){
+    b.innerHTML=`<input type="text" id="fi" autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="Type your answer"><button class="btn" id="ck" style="margin-top:10px">Check answer</button>`;
+    document.getElementById('ck').onclick=()=>{
+      const v=norm(document.getElementById('fi').value);if(!v)return;
+      document.getElementById('fi').disabled=true;
+      finish(q.a.map(norm).includes(v),q.a[0]);
+    };
+  }else if(q.t==='sort'){
+    b.innerHTML=q.i.map((it,k)=>`<div class="row" data-k="${k}"><span>${esc(it[0])}</span>${q.c.map((c,j)=>`<button class="opt" data-j="${j}">${c}</button>`).join('')}</div>`).join('')+`<button class="btn" id="ck" style="margin-top:10px">Check answers</button>`;
+    b.querySelectorAll('.row').forEach(r=>r.querySelectorAll('button').forEach(x=>x.onclick=()=>{
+      if(done)return;sortState[r.dataset.k]=+x.dataset.j;
+      r.querySelectorAll('button').forEach(y=>y.classList.remove('ok'));x.classList.add('ok');
+    }));
+    document.getElementById('ck').onclick=()=>{
+      if(Object.keys(sortState).length<q.i.length){document.getElementById('fb').innerHTML='<div class="fb no">Choose an answer for every item first.</div>';return}
+      let all=true;
+      b.querySelectorAll('.row').forEach(r=>{
+        const k=+r.dataset.k,right=sortState[k]===q.i[k][1];if(!right)all=false;
+        r.querySelectorAll('button').forEach(y=>{y.disabled=true;y.classList.remove('ok');
+          if(+y.dataset.j===q.i[k][1])y.classList.add('ok');else if(+y.dataset.j===sortState[k])y.classList.add('no')});
+      });
+      finish(all,null);
+    };
+  }
+}
+function pick(right,el,b,ans){
+  b.querySelectorAll('button').forEach(x=>x.disabled=true);
+  el.classList.add(right?'ok':'no');
+  const q=Q[i];
+  if(!right){
+    const c=q.t==='tf'?(q.a?1:0):q.a;
+    const t=b.querySelector(`[data-k="${c}"]`);if(t)t.classList.add('ok');
+  }
+  finish(right,null);
+}
+function finish(right,ans){
+  const q=Q[i];
+  if(right)score++;
+  res.push({q:q.q,right,ans:ans});
+  const last=i===Q.length-1;
+  document.getElementById('fb').innerHTML=`<div class="fb ${right?'ok':'no'}"><b>${right?'Correct!':'Not quite.'}</b>${!right&&ans?' Answer: '+esc(ans)+'.':''} ${esc(q.e)}</div><button class="btn" id="nx" style="margin-top:12px">${last?'See my result':'Next question'}</button>`;
+  document.getElementById('nx').onclick=()=>{i++;last?result():show()};
+  document.getElementById('nx').focus();
+}
+function result(){
+  const p=Math.round(score/Q.length*100);
+  const msg=p>=80?'Excellent work!':p>=50?'Good job. You passed.':'Keep practising. Try again!';
+  const text=`${name} scored ${score}/${Q.length} (${p}%) in the Computer Fundamentals Quiz.`;
+  const missed=res.filter(r=>!r.right);
+  app.innerHTML=`<div class="card" style="text-align:center"><div class="tag">Result for ${esc(name)}</div><div class="big">${score}/${Q.length}</div><p><b>${p}%</b>. ${msg}</p>
+  <a class="btn" style="display:block;text-decoration:none" href="https://wa.me/?text=${encodeURIComponent(text)}" target="_blank" rel="noopener">Send my score on WhatsApp</a>
+  <button class="opt btn alt" id="again" style="text-align:center;margin-top:10px">Try again</button></div>
+  ${missed.length?`<div class="card"><b>Review: what to practise</b>${missed.map(m=>`<div class="miss">${esc(m.q)}</div>`).join('')}</div>`:'<div class="card">You got every question right!</div>'}`;
+  document.getElementById('again').onclick=()=>{i=0;score=0;res=[];show()};
+}
+start();
+</script>
+</body>
+</html>
